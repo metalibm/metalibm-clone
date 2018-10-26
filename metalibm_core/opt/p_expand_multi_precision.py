@@ -41,13 +41,12 @@ from metalibm_core.core.ml_formats import (
 )
 
 from metalibm_core.core.ml_operations import (
-    Addition, Constant, Multiplication, Variable, 
+    Addition, Subtraction, FusedMultiplyAdd, Constant, Multiplication, Variable, 
     BuildFromComponent
 )
 from metalibm_core.opt.ml_blocks import (
-    Add222, Add122, Add221, Add212, 
-    Add121, Add112, 
-    Add211, Mul212, Mul211, Mul222
+    Add222, Add221, Add212, Add121, Add112, Add211,
+    Mul222, Mul221, Mul212, Mul121, Mul112, Mul211
 )
 
 from metalibm_core.utility.log_report import Log
@@ -186,8 +185,27 @@ class MultiPrecisionExpander:
 
     def expand_sub(self, node):
         raise NotImplementedError
+
     def expand_mul(self, node):
-        raise NotImplementedError
+        """ Expand Multiplication """
+        MUL_EXPANSION_MAP = {
+            # double precision based formats
+            (ML_DoubleDouble, (ML_Binary64, ML_Binary64)): Mul211,
+            (ML_DoubleDouble, (ML_DoubleDouble, ML_Binary64)): Mul221,
+            (ML_DoubleDouble, (ML_Binary64, ML_DoubleDouble)): Mul212,
+            (ML_DoubleDouble, (ML_DoubleDouble, ML_DoubleDouble)): Mul222,
+            (ML_Binary64, (ML_DoubleDouble, ML_Binary64)): Mul121,
+            (ML_Binary64, (ML_Binary64, ML_DoubleDouble)): Mul112,
+            # single precision based formats
+            (ML_SingleSingle, (ML_Binary32, ML_Binary32)): Mul211,
+            (ML_SingleSingle, (ML_SingleSingle, ML_Binary32)): Mul221,
+            (ML_SingleSingle, (ML_Binary32, ML_SingleSingle)): Mul212,
+            (ML_SingleSingle, (ML_SingleSingle, ML_SingleSingle)): Mul222,
+            (ML_Binary32, (ML_SingleSingle, ML_Binary32)): Mul121,
+            (ML_Binary32, (ML_Binary32, ML_SingleSingle)): Mul112,
+        }
+        return self.expand_binary_op(node, MUL_EXPANSION_MAP)
+    
     def expand_fma(self, node):
         raise NotImplementedError
 

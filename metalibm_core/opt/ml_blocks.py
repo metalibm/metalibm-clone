@@ -165,6 +165,11 @@ def Mul212(x, yh, yl, precision=None, fma=True):
     t4 = Addition(t2, t3, precision=precision)
     return Add211(t1, t4, precision)
 
+def Mul221(xh, xl, y, precision=None, fma=True):
+    """ Multi-precision Multiplication:
+        HI, LO = [xh:xl] * y """
+    return Mul212(y, xh, xl, precision, fma)
+
 def Mul222(xh, xl, yh, yl, precision=None, fma=True):
     """ Multi-precision Multiplication:
         HI, LO = [xh:xl] * [yh:yl] """
@@ -236,3 +241,21 @@ def Add112(xh, yh, yl, precision=None):
         HI = xh + [yh:yl] """
     zh, _ = Add212(xh, yh, yl, precision)
     return zh
+
+def Mul122(xh, xl, yh, yl, precision=None):
+    """ Multi-precision Multiplication:
+        HI = [xh:xl] * [yh:yl] """
+    zh, _ = Mul222(xh, xl, yh, yl, precision)
+    return zh
+
+def Mul121(xh, xl, yh, precision=None):
+    """ Multi-precision Multiplication:
+        HI = [xh:xl] * yh """
+    zh, _ = Mul221(xh, xl, yh, precision)
+    return zh
+
+def Mul112(xh, yh, yl, precision=None):
+    """ Multi-precision Multiplication:
+        HI = xh * [yh:yl] """
+    return Mul121(yh, yl, xh, precision)
+
