@@ -367,7 +367,7 @@ class CodeObject(CodeConfiguration):
     def get_multiline_comment(self, comment_list):
         result = "/**\n"
         for comment in comment_list:
-            result += " * " + comment.replace("\n", "\n * ") + "\n"
+            result += " * " + comment.replace("\n", "\n *") + "\n"
         result += "**/\n"
         return result
 
@@ -382,7 +382,7 @@ class CodeObject(CodeConfiguration):
         result = ""
         # generating git comment
         if git_tag:
-            git_comment = "generated using metalibm %s \n sha1 git: %s \n" % (ml_version_info.VERSION_NUM, ml_version_info.GIT_SHA)
+            git_comment = "generated using metalibm %s\nsha1 git: %s\n" % (ml_version_info.VERSION_NUM, ml_version_info.GIT_SHA)
             self.header_comment.insert(0, git_comment)
         # generating header comments
         result += self.get_multiline_comment(self.header_comment)
@@ -585,7 +585,7 @@ class LLVMCodeObject(CodeObject):
     def get_multiline_comment(self, comment_list):
         result = ""
         for comment in comment_list:
-            result += "; " + comment.replace("\n", "\n; ") + "\n"
+            result += "; " + comment.replace("\n", "\n;") + "\n"
         return result
 
     def get(self, code_generator, static_cst=False, static_table=False, headers=False, skip_function = True):
@@ -701,7 +701,7 @@ class VHDLCodeObject(CodeConfiguration):
         result = ""
         # generating git comment
         if git_tag:
-            git_comment = "generated using metalibm %s \n sha1 git: %s \n" % (ml_version_info.VERSION_NUM, ml_version_info.GIT_SHA)
+            git_comment = "generated using metalibm %s\n sha1 git: %s\n" % (ml_version_info.VERSION_NUM, ml_version_info.GIT_SHA)
             self.header_comment.insert(0, git_comment)
         # generating header comments
         result += "--\n"
